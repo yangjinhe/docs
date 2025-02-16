@@ -32,7 +32,7 @@ star: true
 
 在网站配置文件的 server 字段中添加
 
-```conf
+```bash title="conf"
 location / {
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   proxy_set_header X-Forwarded-Proto $scheme;
@@ -47,13 +47,28 @@ location / {
 }
 ```
 
+如果需要使用HTTP/3，需要将对应`HOST`行修改为：
+
+```bash title="conf"
+proxy_set_header Host $host:$server_port;
+```
+
+这样修改后的配置同时也可以兼容HTTP/2及更低版本的请求。
+
 :::warning
 如果使用宝塔面板，请务必删除以下默认配置
 
-```conf
+```bash title="conf"
 - location ~ ^/(\.user.ini|\.htaccess|\.git|\.svn|\.project|LICENSE|README.md
 - location ~ .\*\.(gif|jpg|jpeg|png|bmp|swf)$
 - location ~ .\*\.(js|css)?$
+```
+
+并在`/www/server/nginx/conf/proxy.conf`中或对应网站配置文件中设置禁用Nginx缓存，否则默认配置下访问较大文件时Nginx会先尝试将远程文件缓存至本机，导致播放失败
+
+```bash title="conf"
+proxy_cache cache_one; # 删除这一行
+proxy_max_temp_file_size 0; #加上这一行
 ```
 
 :::
@@ -69,7 +84,9 @@ location / {
     DocumentRoot /www/myapp/public
 
     AllowEncodedSlashes NoDecode
+    ProxyPreserveHost On
     ProxyPass "/" "http://127.0.0.1:5244/" nocanon
+    ProxyPassReverse "/" "http://127.0.0.1:5244/" nocanon
 </VirtualHost>
 ```
 

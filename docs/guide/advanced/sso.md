@@ -101,7 +101,7 @@ Click on the new application and we will see the application credentials option,
 
 Go to the left column and find `Login and Share` ==Fill in the callback parameters **`http://127.0.0.1:5234/api/auth/sso_callback`**==
 
-```Callback parameter example
+```bash title="Callback" parameter example
 http://127.0.0.1:5244/api/auth/sso_callback
 ```
 
@@ -131,7 +131,7 @@ Account type must be selected: **Account in any organizational directory (any Az
 
 Microsoft callback parameters: must start with "HTTPS" or "http://localhost (I used localhost here for local testing)
 
-```Callback parameter example
+```bash title="Callback" parameter example
 http://localhost:5244/api/auth/sso_callback?method=sso_get_token
 http://localhost:5244/api/auth/sso_callback?method=get_sso_id
 ```
@@ -175,7 +175,7 @@ If you want to use Google to log in, you first need the machine you built Alist 
 - Application Type Select Web Application, and write the name as you like
 - Then add our two callback parameters in the authorized redirect URI
 
-```Callback parameter example
+```bash title="Callback" parameter example
 http://127.0.0.1:5244/api/auth/sso_callback?method=get_sso_id
 http://127.0.0.1:5244/api/auth/sso_callback?method=sso_get_token
 ```
@@ -241,6 +241,50 @@ In addition to the four that `AList` has already connected to `GitHub Dingding G
 ::: details Direct iframe viewing
 <iframe src="https://anwen-anyi.github.io/index/09-ssologin.html#%E6%8E%A5%E5%85%A5" name="iframe_a" scrolling="ok" frameborder="0" width="100%" height="1000" style="scrolling: no;1px solid #ccc; border-radius: 16px;"></iframe>
 :::
+
+@tab Authentik
+
+## Authentik Setup
+**Create a Provider for AList**
+  1. Menu -> Applications -> Providers -> Create
+  2. Select `OAuth2/OpenID Provider` and click next
+  3. Enter an application name, this guide assumes you will call the provider `AList`
+  4. Select your authorization flow. The built-in `default-provider-authorization-implicit-consent` is acceptable
+  5. Make note of the `Client ID` and `Client Secret` fields as provided by Authentik - save these values for later
+  6. For Redirect UDIs/Origins, enter the following, replacing [your.alist.domain] with the FQDN for your AList installation:
+```bash title="Callback" parameters
+https://your.alist.domain/api/auth/sso_callback\?method=sso_get_token
+https://your.alist.domain/api/auth/sso_callback\?method=get_sso_id
+```
+    
+    Please note the \ character before ? as an escape character for the regex used for this URI is mandatory.
+  7. Make note of the signing key selected as you will need it later. This guide assumes you will use the default `authentik Self-signed Certificate`
+  8. Save the new provider
+
+**Create an Application for AList**
+  1. Menu -> Applications -> Application -> Create
+  2. Enter an application name, recommended `AList`
+  3. An application slug of `alist` will be automatically selected for you. This guide assumes you will keep this value
+  4. Select the provider by name you selected in Provider Setup step 3 - `AList`
+  5. Save the new application
+
+**Retrieve the JWT certificate**
+  1. Menu -> System -> Certificates
+  2. Select the `>` next to the `authentik Self-signed Certificate`. If you chose another certificate for the application, select that certificate instead
+  3. Click Download Certificate to get a copy of the public JWT key
+
+## AList Setup
+- **Sso login enabled:** `yes`
+- **Sso login platform:** `OIDC`
+- **Sso client id:** [Client ID from Authentik]
+- **Sso client secret:** [Client Secret from Authentik]
+- **Sso oidc username key:** `preferred_username`
+- **Sso organization name:** `user`
+- **Sso application name:** `user`
+- **Sso endpoint name:** `https://your.authentik.domain/application/o/alist/`
+  - **Note:** Replace [your.authentik.domain] with the FQDN for your Authentik installation. Mind the trailing `/` at the end of the path. If you chose a different application slug in Authentik Application setup 3, substitute that here
+- **Sso jwt public key:** Open the certificate file downloaded in step 3.3 of the Authentik Application setup and paste the contents here. It will start with `-----BEGIN CERTIFICATE-----`
+- **Sso compatability mode:** `no`
 
 ::::
 
@@ -403,7 +447,7 @@ After turning on **`Sso compatibility mode`** Then you need to log in to the cor
 - `GitHub` only needs to add one：`http(s)://You_Url/api/auth/sso_get_token`
 - `Microsoft` and` Google` both need to be added, you can add multiple Redirect urls, so you only need to add two Redirect URLs.
 
-```New
+```bash title="New"
 http(s)://You_Url/api/auth/get_sso_id
 http(s)://You_Url/api/auth/sso_get_token
 ```

@@ -47,7 +47,13 @@ After modifying the configuration file, restart AList for changes to take effect
     "name": "",
     "db_file": "data\\data.db",
     "table_prefix": "x_",
-    "ssl_mode": ""
+    "ssl_mode": "",
+    "dsn": ""
+  },
+  "meilisearch": {
+    "host": "http://localhost:7700",
+    "api_key": "",
+    "index_prefix": ""
   },
   "scheme": {
     "address": "0.0.0.0",
@@ -61,34 +67,51 @@ After modifying the configuration file, restart AList for changes to take effect
   },
   "temp_dir": "data\\temp",
   "bleve_dir": "data\\bleve",
+  "dist_dir": "",
   "log": {
     "enable": true,
     "name": "data\\log\\log.log",
-    "max_size": 10,
-    "max_backups": 5,
+    "max_size": 50,
+    "max_backups": 30,
     "max_age": 28,
     "compress": false
   },
   "delayed_start": 0,
   "max_connections": 0,
+  "max_concurrency": 64,
   "tls_insecure_skip_verify": true,
   "tasks": {
     "download": {
       "workers": 5,
-      "max_retry": 1
+      "max_retry": 1,
+      "task_persistant": false
     },
     "transfer": {
       "workers": 5,
-      "max_retry": 2
+      "max_retry": 2,
+      "task_persistant": false
     },
     "upload": {
       "workers": 5,
-      "max_retry": 0
+      "max_retry": 0,
+      "task_persistant": false
     },
     "copy": {
       "workers": 5,
-      "max_retry": 2
-    }
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "decompress": {
+      "workers": 5,
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "decompress_upload": {
+      "workers": 5,
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "allow_retry_canceled": false
   },
   "cors": {
     "allow_origins": [
@@ -100,7 +123,29 @@ After modifying the configuration file, restart AList for changes to take effect
     "allow_headers": [
       "*"
     ]
-  }    
+  },
+  "s3": {
+    "enable": false,
+    "port": 5246,
+    "ssl": false
+  },
+  "ftp": {
+    "enable": false,
+    "listen": ":5221",
+    "find_pasv_port_attempts": 50,
+    "active_transfer_port_non_20": false,
+    "idle_timeout": 900,
+    "connection_timeout": 30,
+    "disable_active_mode": false,
+    "default_transfer_binary": false,
+    "enable_active_conn_ip_check": true,
+    "enable_pasv_conn_ip_check": true
+  },
+  "sftp": {
+    "enable": false,
+    "listen": ":5222"
+  },
+  "last_launched_version": "AList version"
 }
 ```
 
@@ -194,7 +239,8 @@ The database configuration, which is by default `sqlite3`. Available options are
     "name": "",         //database name
     "db_file": "data\\data.db",     //Database location, used by sqlite3
     "table_prefix": "x_",           //database table name prefix
-    "ssl_mode": ""      //To control the encryption options during the SSL handshake, the parameters can be searched by themselves, or check the answer from ChatGPT below
+    "ssl_mode": "",     //To control the encryption options during the SSL handshake, the parameters can be searched by themselves, or check the answer from ChatGPT below
+    "dsn": ""           // https://github.com/alist-org/alist/pull/6031
   },
 ```
 
@@ -247,6 +293,26 @@ In PostgreSQL, the `ssl_mode` parameter is used to specify how the client uses S
 
 
 
+### **meilisearch**
+
+```json
+  "meilisearch": {
+    "host": "http://localhost:7700",    //Use `meilisearch` link, the default is the local machine
+    "api_key": "",                      //Please check the `meilisearch` documentation
+    "index_prefix": ""                  //Please check the `meilisearch` documentation
+  },
+```
+
+Documentation link：https://www.meilisearch.com/docs
+
+Reference Links：https://github.com/AlistGo/alist/discussions/6830
+
+
+
+<br/>
+
+
+
 ### **scheme**
 
 The configuration of scheme. Set this field if using HTTPS.
@@ -285,6 +351,23 @@ temp_dir is a temporary folder exclusive to alist. In order to prevent AList fro
 ### **bleve_dir**
 
 Where data is stored when using  **`bleve`** index.
+
+<br/>
+
+
+
+### **dist_dir**
+
+If this item is set, the front -end file of this option is preferred to render, support the use of other front -end files, and the back -end continues to use the original application
+
+- https://github.com/alist-org/alist/issues/5531
+- https://github.com/alist-org/alist/discussions/6110
+
+Upload the front -end file (dist) to the `data` folder of the application, and then fill in this way. The disadvantage is that if you update each time, you need to change the file manually
+
+```json
+  "dist_dir": "data\\dist",
+```
 
 <br/>
 
@@ -329,6 +412,12 @@ The maximum amount of connections at the same time. The default is 0, which is u
 
 <br/>
 
+### **max_concurrency**
+
+Limit the maximum concurrency of local agents. The default value is 64, and 0 means no limit.
+
+<br/>
+
 
 
 ### **tls_insecure_skip_verify**
@@ -347,31 +436,56 @@ Configuration for background task threads.
   "tasks": {
     "download": {
       "workers": 5,
-      "max_retry": 1
+      "max_retry": 1,
+      "task_persistant": false
     },
     "transfer": {
       "workers": 5,
-      "max_retry": 2
+      "max_retry": 2,
+      "task_persistant": false
     },
     "upload": {
       "workers": 5,
-      "max_retry": 0
+      "max_retry": 0,
+      "task_persistant": false
     },
     "copy": {
       "workers": 5,
-      "max_retry": 2
-    }
-  }
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "decompress": {
+      "workers": 5,
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "decompress_upload": {
+      "workers": 5,
+      "max_retry": 2,
+      "task_persistant": false
+    },
+    "allow_retry_canceled": false
+  },
 ```
 
 - **workers**: Number of task threads.
 - **max_retry**: Number of retries.
   - 0: Retries disabled.
-
 - **download**: Download task when downloading offline
 - **transfer**: upload transfer task after offline download is completed
 - **upload**: upload task
 - **copy**: copy the task
+- **decompress**：decompress the task
+- **decompress_upload**：decompress upload the task
+- **task_persistant**：The task is persistent and will not be cancelled after restarting `AList`
+  - **download**：false
+  - **transfer**：false
+  - **upload**：false
+  - **copy**：false
+  - **decompress**：false
+  - **decompress_upload**：false
+- **allow_retry_canceled**：Allow users to retry previously canceled tasks
+
 
 <br/>
 
@@ -400,3 +514,84 @@ Configuration for Cross-Origin Resource Sharing (CORS).
 - **allow_headers**: Allowed request headers.
 
 Use it to understand it by yourself, and then configure it. If you do n’t know, please do n’t modify it at will. Use the default configuration.
+
+<br/>
+
+
+
+### **S3**
+
+```json
+  "s3": {
+    "enable": false,
+    "port": 5246,
+    "ssl": false
+  }
+```
+
+- `enable`：Whether the S3 function is enabled, the default is not enabled
+- `port`：port
+- `SSL`：Enable the HTTPS certificate, not enabled by default
+
+Function introduction: [Click to view](../guide/advanced/s3.md)
+
+<br/>
+
+
+
+### **ftp** <Badge text="v3.41.0" type="info" vertical="middle" />
+
+````json
+  "ftp": {
+    "enable": false,
+    "listen": ":5221",
+    "find_pasv_port_attempts": 50,
+    "active_transfer_port_non_20": false,
+    "idle_timeout": 900,
+    "connection_timeout": 30,
+    "disable_active_mode": false,
+    "default_transfer_binary": false,
+    "enable_active_conn_ip_check": true,
+    "enable_pasv_conn_ip_check": true
+  },
+````
+
+- `enable`: Whether the **ftp** function is enabled, not enabled by default
+
+- `listen`: port number
+
+- `find_pasv_port_attempts`: maximum number of attempts to re-find a port due to port conflicts during passive transmission
+
+- `active_transfer_port_non_20`: enable ports other than 20 as active transmission ports
+
+- `idle_timeout`: maximum idle time (seconds) when there is no client request
+
+- `connection_timeout`: connection timeout
+
+- `disable_active_mode`: disable active transmission mode
+
+- `default_transfer_binary`: transfer in binary mode by default
+
+- `enable_active_conn_ip_check`: perform IP check on the client side of the TCP connection of the data stream in active transmission mode
+
+- `enable_pasv_conn_ip_check`: perform IP check on the client side of the TCP connection of the data stream in passive transmission mode
+
+Other instructions: [Click to view](../guide/advanced/ftp.md)
+
+<br/>
+
+
+
+### **sftp** <Badge text="v3.41.0" type="info" vertical="middle" />
+
+```json
+  "sftp": {
+    "enable": false,
+    "listen": ":5222"
+  }
+```
+
+- `enable`: Whether the **sftp** function is enabled, not enabled by default
+- `listen`: port number
+
+Other instructions: [Click to view](../guide/advanced/ftp.md)

@@ -10,6 +10,7 @@ category:
 tag:
   - Storage
   - Guide
+  - "302"
 # this page is sticky in article list
 sticky: true
 # this page will appear in starred articles
@@ -20,6 +21,17 @@ star: true
 :::tip
 **`UrlTree`** What is it? It is used to mount a single file link. For details, you can check  **→→→[Original Requirements Description](https://github.com/alist-org/alist/issues/3268)←←←**
 :::
+
+
+
+## **Writable** <Badge text="≥ 3.42.0" type="info" vertical="middle" />
+
+After opening, you can perform `MakeDir`, `Move`, `Rename`, `Copy`, `Remove`, `PutURL` on this driver
+
+- When a user attempts to use SimpleHttp for offline downloading in a driver that implements this interface, the offline download tool will not be invoked. Instead, the `PutURL` method of the driver will be called.
+- **https://github.com/AlistGo/alist/pull/7779**
+
+<br/>
 
 
 

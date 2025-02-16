@@ -18,17 +18,44 @@ star: true
 
 # Common
 
-### **Mount Path**
+## **Mount Path**
 
 Unique identifier, that is the location you want to mount to, if you want to mount to the root directory, it is `/`
 
-### **Order**
+<br/>
+
+
+
+## **Order**
 
 When there are multiple accounts, it is used for sorting, The smaller the more forward
 
-### **Remark**
+<br/>
+
+
+
+## **Remark**
 
 Anything you want to fill in, which is just for reminding you what this storage is
+
+### **Reference authentication, tokens, etc. from `Mounted Storage`, and use the same token for multiple network disks** <Badge text="≥ 3.42.0" type="info" vertical="middle" />
+
+Currently only the following network disks are supported:
+
+- 139Yun
+- AliyundriveOpen
+- 189CloudPC
+- 123PanShare（ref 123Pan）
+
+In the storage settings, set the first line of `Remark` to: **ref:/mount path**
+
+- https://github.com/AlistGo/alist/pull/7805
+
+![](/img/drivers/ref_token.png)
+
+<br/>
+
+
 
 ## **Enable signing**
 
@@ -38,21 +65,60 @@ Usage scenario: I don't want to enable all signatures, and I don't want to set m
 
 Scope of influence: `Settings-->Global-->Signature All` > `Metainformation Directory Encryption` > `Single Driver Signature`
 
+<br/>
+
+
+
+## **Disable index**
+
+Allow users to disable storage indexing.
+
+- For example, if you enable `Ignore Index` in the index options, you no longer need to configure it after enabling `Disable Index`, which is more convenient.
+
+[alist#7730](https://github.com/AlistGo/alist/pull/7730)、[alist-web#219](https://github.com/AlistGo/alist-web/pull/219)
+
+<br/>
+
+
+
 ### **Cache Expiration**
 
 Cache time of directory structure.
 
-### **Web proxy**
+<br/>
+
+
+
+## **Web proxy**
 
 Whether the web preview,download and the direct link go through the transfer. If you open this, recommended you set [site_url](../../config/configuration.md#site_url) so that alist can works fine.
 
-### **Webdav policy**
+-----
+
+- Web proxy Strategies ：It is a strategy when using the webpage. The default is a local agent. If you fill in the proxy URL and enable the web agent to use the proxy URL
+- Webdav policy Strategies：It is an option to use the webdav function
+  - If there are 302 options default to 302, if there is no 302 option default to the local agent, if you want to use the agent URL, please fill in and manually switch to the proxy URL strategy
+
+The two are different configurations
+
+<br/>
+
+
+
+## **Webdav policy**
 
 - 302 redirect: redirect to the real link
 - use proxy URL: redirect to proxy URL
 - native proxy: return data directly through local transit(best compatibility)
 
+-----
+
+- 302 redirect：Although it does not consume traffic, it is not recommended to share and use it.
+- use proxy URL：It will consume the traffic of the agent URL
+- native proxy：The traffic of the construction of Alist device will consume
+
 ### **Description of three modes**
+
 ```flow
 1=>start: cloud disk
 2=>end: you
@@ -76,7 +142,11 @@ Whether the web preview,download and the direct link go through the transfer. If
 11(right)->22(right)->33
 ```
 
-### Download proxy URL
+<br/>
+
+
+
+## Download proxy URL
 
 When the proxy is turned on without filling in this field, the local machine will be used for transfer by default.Two proxy methods are provided:
 
@@ -86,7 +156,8 @@ You can use `cloudflare workers` for proxy, just fill in the `cloudflare workers
 The workers code can be found at https://github.com/alist-org/alist-proxy/blob/main/alist-proxy.js. in:
 
 - ADDRESS: your Alist address, The protocol header must be added, and cannot be followed by /. Such as `https://pan.nn.ci`;
-- TOKEN: you can get in `Other settings` in your Alist manage page.
+- TOKEN: you can get in `Other settings` in your Alist manage page;
+- WORKER_ADDRESS: your worker address, which should normally be same as **Download proxy URL**.
 
 :warning: Cloudflare Workers free CDN only supports (regardless of domestic or foreign) **http80 port** and **https443 port**, from group friend test
 
@@ -119,14 +190,24 @@ The `TOKEN` is the [token](../../config/other.md#token) of admin user.
 - After verifying the sign is correct, requesting `HOST/api/fs/link`, you can get the URL of the file and the request header to be carried
 - Use the information to request and return
 
-### Sort related
+<br/>
+
+
+
+## Sort related
+
 - Sort by: Sort by what
 - Sort direction: Whether the sort direction is ascending or descedning
+
 :::info
 Some drives use their own sorting method, which may be different.
 :::
 
-### Extract folder
+<br/>
+
+
+
+## Extract folder
 
 - Extract to front: put all folders to the front when sorting
 - Extract to back: put all folders to the back when sorting

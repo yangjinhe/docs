@@ -10,6 +10,7 @@ category:
 tag:
   - Storage
   - Guide
+  - "302"
 # this page is sticky in article list
 sticky: true
 # this page will appear in starred articles
@@ -97,26 +98,36 @@ flowchart TB
 
 
 
-## **根文件夹路径**
+## **根文件夹ID**
 
 要挂载的根文件夹，默认为`/`
 
 - 单独挂载某文件夹，按照下面格式，`/`是根目录，想挂载那个目录就延伸到那个目录就可以
   - /文件夹-A/……/文件夹-x
 
+<br/>
 
 
-## **Download API**
+
+## **自定义破解ua**
+
+[**使用【本地代理 & Crack API】时候使用的UA**](https://github.com/alist-org/alist/issues/5602#issuecomment-1831188682)
+
+<br/>
+
+
+
+## **下载接口**
 
 - official: 官方接口，很稳定，但是文件比较大，需要修改UA，速度慢 (SVIP速度快)
-- crack: 非官方接口，现在也需要修改UA且部分文件可能不限速，但是会不稳定（不保证100%可用性）需要使用大于`3.19.0`的版本
-  -  ==需要将UA改成`netdisk`==，修改方法参考下方[添加-user-agent-使用示例](#添加-user-agent-使用示例)
-  -  或者开启Web代理（需要大宽带才能带的动）
-  -  WebDav播放不需要修改UA，可以直接302播放
-  -  仅限于播放/下载 **`视频(只测试了mp4格式其他格式未测试)`**，其他类型文件的会出现下方提示
-  -  如果出现下面的提示请勿担心，这不是错误不是Bug，这只是限制，请勿填写`issue`上报.
+- crack: **似乎已经无法使用了**，~~非官方接口，现在也需要修改UA且部分文件可能不限速，但是会不稳定（不保证100%可用性）需要使用大于`3.19.0`的版本~~ 
+  -  ~~==需要将UA改成`netdisk`==，修改方法参考下方[添加-user-agent-使用示例](#添加-user-agent-使用示例)~~
+  -  ~~或者开启Web代理（需要大宽带才能带的动）~~
+  -  ~~WebDav播放不需要修改UA，可以直接302播放~~
+  -  ~~仅限于播放/下载 **`视频(只测试了mp4格式其他格式未测试)`**，其他类型文件的会出现下方提示~~
+  -  ~~如果出现下面的提示请勿担心，这不是错误不是Bug，这只是限制，请勿填写`issue`上报.~~
 
-```json{3}
+```json{2-4}
 {
 	error_code: 31119,
 	error_msg: "hit black userlist , hit illeage dlna",
@@ -124,11 +135,11 @@ flowchart TB
 }
 ```
 
+<br/>
 
 
 
-
-## **添加 "User-Agent" 使用示例**
+### **添加 "User-Agent" 使用示例**
 
 ::::danger 如果你不会设置 "User-Agent" 请看这里
 
@@ -138,7 +149,21 @@ flowchart TB
 
 有会员改完 **`"User-Agent"`** 才会有用（选择官方和302）
 
-如果不改 **`"User-Agent"`**，可以开启 ==Web代理==，缺点是需要你搭建Alist的机器中转，也就是说你需要大宽带帮你中转
+如果不改 **`"User-Agent"`**，可以开启 ==Web代理==，缺点是需要你搭建AList的机器中转，也就是说你需要大宽带帮你中转
+
+<div>
+    <p style="text-align: center;"><span>网页302模式修改UA教程 : <br/></span>左侧为<span style="color:red;font-weight: bold;font-size: xx-large;">『官方』</span>接口，右侧为<span style="color:blue;font-weight: bold;font-size: xx-large;">『非官方』</span>接口</p>
+    <div class="image-preview">
+        <video width="360" height="240" controls>
+            <source src="https://r2.izyt.cc/alist/baidu/%E7%99%BE%E5%BA%A6%E5%AE%98%E6%96%B9%E6%8E%A5%E5%8F%A3.mp4" type="video/mp4">
+        </video>
+        <video width="360" height="240" controls>
+            <source src="https://r2.izyt.cc/alist/baidu/%E7%99%BE%E5%BA%A6%E9%9D%9E%E5%AE%98%E6%96%B9%E6%8E%A5%E5%8F%A3.mp4" type="video/mp4">
+        </video>
+    </div>
+</div>
+
+
 
 
 
@@ -182,7 +207,22 @@ flowchart TB
 
 ::::
 
-### **默认使用的下载方式**
+## **上传配置**
+
+官方文档：[百度网盘开放平台 - 上传 - 能力说明](https://pan.baidu.com/union/doc/3ksg0s9ye)
+
+> 百度网盘要求在 30s 内完成单个分片的上传，所以上传文件时并发过高可能会导致大量失败。
+
+- 上传线程：同时上传几个分片
+- 上传 API：上传的域名端点
+- 自定义上传分片大小：用于指定分片大小，有限制，仅会员可用
+- 低上传带宽模式：尝试解决低上传带宽场景（如家宽）下，频繁出现 `Client.Timeout exceeded while awaiting headers` 的问题。开启后会使用尽可能小的分片大小。
+
+<br/>
+
+
+
+## **默认使用的下载方式**
 
 ```mermaid
 ---

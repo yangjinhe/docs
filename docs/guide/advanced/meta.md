@@ -17,7 +17,7 @@ star: true
 ---
 
 # Meta
-The configuration in the meta information is only valid for `Guest`, if you want to have the corresponding permissions for the newly created ordinary users, please go to `User`-->`User Account` to modify the relative permissions
+The configuration in the meta information is valid for `All Roles`, if you want to have the corresponding permissions for users, please go to `User`-->`User Account` to modify the relative permissions
 
 ### **Path**
 
@@ -25,20 +25,32 @@ The path for this meta to take effect
 
 <br/>
 
+
+
 ### **Password**
 Password required to access this path
 
+- Meta information password will not take effect when accessed using `WebDav`
+
 <br/>
+
+
 
 ### **Write**
-Allow guest to make directory, new file and upload files.
+Allow user to make directory, new file and upload files.
 
 <br/>
+
+
 
 ### **Hide**
-The objects to hide of this path, One regular expression (in `Golang`) per line.
+The objects to hide of this path, One regular expression (in `Golang`) per line
+
+- Meta information hiding can take effect when accessed using `WebDav`
 
 <br/>
+
+
 
 ### **Readme**
 The Readme to render while enter this path, support markdown content or markdown link.
@@ -49,6 +61,8 @@ The Readme to render while enter this path, support markdown content or markdown
 
 <br/>
 
+
+
 ## **Header**
 
 (new in v3.29.0) The Readme to render while enter this path, support markdown content or markdown link.
@@ -58,13 +72,16 @@ The Readme to render while enter this path, support markdown content or markdown
   - Files can not be displayed in the list, for example `readme.md` is not displayed in the list
   - Backstage --> Settings --> Global --> Hidden files --> Add newline `/\/top.md/i`
 
-
 <br/>
+
+
 
 ### **Apply to sub folder**
 Apply this meta to sub folder of specific path
 
 <br/>
+
+
 
 
 

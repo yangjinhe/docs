@@ -20,6 +20,17 @@ star: true
 
 # WebDAV
 
+::: tip
+
+<Badge text="≥ v3.42.0" type="info"/> 以上版本需要在用户 => 权限 打开 `Webdav 读取` 和 `Webdav 管理` 这两个权限
+
+- 如果只读不修改则只需要打开 `Webdav 读取` 就可以
+
+
+- 如果对文件进行增删改还需要打开 `Webdav 管理`的权限
+
+:::
+
 ## **WebDAV 配置**
 
 | Name     | Value                       |
@@ -56,13 +67,14 @@ star: true
 | YandexDisk       |  ✅  |    ✅    |  ✅   |   ✅   |  ✅  |  ✅  |   ✅   |
 | 百度网盘          |  ✅  |    ✅    |  ✅   |   ✅   |  ✅  |  ✅  |   ✅   |
 | 夸克网盘          |  ✅  |    ✅    |  ✅   |   ✅   |  ✅  |  ✅  |   ✅   |
+| KodBox           |  ✅  |    ✅    |  ✅   |   ✅   |  ✅  |  ✅  |   ✅   |
 
 ## **可以用来挂载WebDav的软件**
 
 1. **Windows**
    - [Potplayer](https://potplayer.daum.net/)，[kmplayer](https://www.kmplayer.com/home)，[RaiDrive](https://www.raidrive.com/)，[kodi](https://kodi.tv/download)，[OneCommander](https://www.onecommander.com/)，[Mountain Duck](https://mountainduck.io/)，[netdrive](https://www.netdrive.net/) :x:，[rclone](https://rclone.org/)，[AIMP](https://www.aimp.ru/)
 2. **Android**
-   - [Nplayer](https://www.alipan.com/s/cf3p39UXkxa)，[kmplayer](https://www.kmplayer.com/home)，ES文件管理器，[kodi](https://kodi.tv/download)，[nova魔改](https://www.alipan.com/s/cf3p39UXkxa/folder/63e8dcc229204583fff34f8cbd53dfcd6a86f526)，[reex](https://www.alipan.com/s/cf3p39UXkxa/folder/63e8e0027b7473f82cc64bbb9be0a34794c32c07)，cx 文件管理器，Solid Explorer,[X-plore File Manager](https://www.lonelycatgames.com/apps/xplore)
+   - [Nplayer](https://www.alipan.com/s/cf3p39UXkxa)，[kmplayer](https://www.kmplayer.com/home)，ES文件管理器，[kodi](https://kodi.tv/download)，[nova魔改](https://www.alipan.com/s/cf3p39UXkxa/folder/63e8dcc229204583fff34f8cbd53dfcd6a86f526)，[reex](https://www.alipan.com/s/cf3p39UXkxa/folder/63e8e0027b7473f82cc64bbb9be0a34794c32c07)，cx 文件管理器，Solid Explorer，[X-plore File Manager](https://www.lonelycatgames.com/apps/xplore)，[MiXplorer](https://mixplorer.com/)
 3. **IOS**
    - [VidHub](https://zh.okaapps.com/product/1659622164)，Nplayer，[kmplayer](https://www.kmplayer.com/home)，infuse，zFuse, Fileball文件管理器
 4. **电视TV**
